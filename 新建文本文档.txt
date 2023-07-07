@@ -1,0 +1,31 @@
+
+2.3.2	 SOC与HOST 开启IOMMU以及大页内存
+IOMMU开启和大页内存需要配置内核启动项，具体做法如下所示：
+
+1 修改/etc/default/grub, 调整GRUB_CMDLINE_LINUX内容
+
+IOMMU开启：
+
+ amd_iommu：
+GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet amd_iommu=on iommu=pt"
+或intel_iommu：
+  GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet intel_iommu=on iommu=pt"
+
+大页内存:
+
+在grub.cfg加入以下配置：
+‘default_hugepagesz=1G hugepagesz=1G hugepages=8’
+
+2 重新创建引导
+
+如果服务器时UEFI启动
+ grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
+普通模式启动
+  grub2-mkconfig -o /boot/grub2/grub.cfg
+
+3 reboot
+
+IOMMU关闭：
+1 修改/etc/default/grub，删除iommu配置
+2 重新创建引导同上
+3 reboot
